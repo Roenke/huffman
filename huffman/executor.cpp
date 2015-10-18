@@ -1,10 +1,12 @@
 ﻿#include "executor.h"
+#include <climits>
+#include <iostream>
 #include "raw_reader.h"
 #include "huffman_tree.h"
 #include "encoded_writer.h"
 #include "encoded_reader.h"
 #include "raw_writer.h"
-#include <iostream>
+
 
 executor::executor(task_descriptor& task_descriptor)
     :task_descriptor_(task_descriptor)
@@ -51,7 +53,10 @@ void executor::encode_file(std::vector<std::vector<bool>>& codes, raw_reader& re
         }
     }
 
-    output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
+    if(bit_counter >= CHAR_BIT * sizeof(buf))
+    {
+        output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
+    }
 
     writer.append_data(reinterpret_cast<char*>(output_buffer), output_buffer_ptr);
 

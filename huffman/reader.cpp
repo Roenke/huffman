@@ -3,7 +3,7 @@
 
 std::streampos reader::get_file_size() const
 {
-    std::ifstream file(filename_, std::ifstream::ate | std::ifstream::binary);
+    std::ifstream file(filename_, std::ifstream::app | std::ifstream::ate | std::ifstream::binary);
     if(!file.good())
     {
         io_exception ex("Cannot open file " + filename_);

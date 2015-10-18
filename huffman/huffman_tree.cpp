@@ -1,6 +1,7 @@
 ﻿#include "huffman_tree.h"
 #include <vector>
 #include <queue>
+#include <climits>
 #include "encoded_reader.h"
 #include "raw_writer.h"
 #include "parameters_parser.h"
@@ -11,6 +12,7 @@ huffman_tree::huffman_tree(std::vector<std::pair<uint8_t, size_t>>& frequencies)
 {
     tree_root_ = nullptr;
     codes_.resize(alphabet_size_);
+    is_codes_resolved_ = false;
     build(frequencies);
 }
 
@@ -95,6 +97,12 @@ std::vector<std::vector<bool>> const& huffman_tree::get_codes_mapping()
 void huffman_tree::decode(encoded_reader &reader, raw_writer& writer) const
 {
     using namespace internal_tree;
+
+    if(tree_root_ == nullptr)
+    {
+        writer.append_data("", 0);
+        return;
+    }
 
     auto input_buffer = new uint8_t[task_descriptor::in_buffers_size];
     auto output_buffer = new uint8_t[task_descriptor::out_buffers_size];

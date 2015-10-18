@@ -8,10 +8,10 @@ void encoded_writer::append_data(char* data, size_t data_size)
 {
     if(!opened_file_.is_open())
     {
-        opened_file_.open(filename_, std::ofstream::app | std::fstream::binary);
+        opened_file_.open(filename_, std::ofstream::app | std::ofstream::ate | std::ofstream::binary);
         if(!opened_file_.good())
         {
-            io_exception ex("Cannot open file " + filename_);
+            io_exception ex("Cannot open file " + filename_ + " for append encoded data.");
             throw ex;
         }
 

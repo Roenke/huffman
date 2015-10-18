@@ -32,7 +32,8 @@ void raw_reader::read_frequencies(std::vector<std::pair<uint8_t, size_t>>& frequ
         }
     }
 
-    for (size_t i = 0; i < file.gcount();  ++i)
+    auto yet_size = static_cast<size_t>(file.gcount());
+    for (size_t i = 0; i < yet_size;  ++i)
     {
         frequencies[buffer[i]].second++;
     }
@@ -45,7 +46,7 @@ bool raw_reader::read_content(char* buffer, size_t buffer_size, size_t& readed)
         opened_file_.open(filename_, std::ifstream::binary);
         if (!opened_file_.good())
         {
-            io_exception ex("Cannot open file" + filename_);
+            io_exception ex("Cannot open file" + filename_ + " for reading raw data.");
             throw ex;
         }
     }

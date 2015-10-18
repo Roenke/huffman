@@ -10,10 +10,10 @@ void raw_writer::append_data(char* data, size_t data_size)
 {
     if(!opened_file_.is_open())
     {
-        opened_file_.open(filename_, std::ofstream::app | std::ofstream::binary);
+        opened_file_.open(filename_, std::ofstream::binary);
         if(!opened_file_.good())
         {
-            io_exception ex("Cannot open file" + filename_);
+            io_exception ex("Cannot open file" + filename_ + " for writeing raw data.");
             throw ex;
         }
     }

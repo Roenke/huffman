@@ -35,15 +35,15 @@ bool encoded_reader::read_content(char* buffer, size_t buffer_size, size_t& read
 {
     if(!opened_file_.is_open())
     {
-        opened_file_.open(filename_, std::ifstream::binary);
+        opened_file_.open(filename_, std::ifstream::app | std::ifstream::binary);
         if(!opened_file_.good())
         {
-            io_exception ex("Cannot open file " + filename_);
+            io_exception ex("Cannot open file " + filename_ + " for reading content.");
             throw ex;
         }
 
         uint16_t alphabet_size;
-        opened_file_.read(reinterpret_cast<char*>(&alphabet_size), sizeof(uint16_t));
+        opened_file_.read(reinterpret_cast<char*>(&alphabet_size), sizeof(alphabet_size));
         auto offset = eval_header_size(alphabet_size);
         opened_file_.seekg(offset, opened_file_.beg);
     }
@@ -59,10 +59,10 @@ bool encoded_reader::read_content(char* buffer, size_t buffer_size, size_t& read
 
 size_t encoded_reader::get_system_info_size() const
 {
-    std::ifstream file(filename_, std::fstream::ate);
+    std::ifstream file(filename_, std::ifstream::binary);
     if(!file.good())
     {
-        io_exception ex("Cannot open file " + filename_);
+        io_exception ex("Cannot open file " + filename_ + " for getting size of headers.");
         throw ex;
     }
 

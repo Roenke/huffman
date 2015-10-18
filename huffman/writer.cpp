@@ -13,10 +13,10 @@ writer::~writer()
 
 std::streampos writer::get_file_size() const
 {
-    std::ofstream file(filename_, std::ifstream::ate | std::ifstream::binary);
+    std::ofstream file(filename_, std::fstream::app | std::ifstream::ate | std::ifstream::binary);
     if (!file.good())
     {
-        io_exception ex("Cannot open file" + filename_);
+        io_exception ex("Cannot open file" + filename_ + " for getting size.");
         throw ex;
     }
 
