@@ -1,6 +1,6 @@
 #pragma once
-#include "task_descriptor.h"
 #include <vector>
+#include "task_descriptor.h"
 
 class parameters_parser
 {
@@ -13,6 +13,7 @@ private:
 	static const std::string in_file_long_key_;
 	static const std::string out_file_key_;
 	static const std::string out_file_long_key_;
+
 	static bool is_file_exists(std::string const& filename);
 
 	static void try_in_file_correct(std::vector<std::string>const&, std::string& filename);

@@ -48,6 +48,9 @@
     <ClCompile Include="parse_exception.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="reader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="encoded_reader.h">
@@ -76,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="parse_exception.h">
       <Filter>Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="reader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,12 +22,14 @@ void ShowUsage()
 
 void encode_file(std::vector<std::vector<bool>>& codes, raw_reader& reader, encoded_writer& writer)
 {
-	auto content = reader.get_content();
-	
-	auto length = content.size();
-	for (size_t i = 0; i < length; ++i)
+	auto buffer = new uint8_t[4096];
+	size_t readed;
+	while(reader.read_content(reinterpret_cast<char*>(buffer), 4096, readed))
 	{
-		writer.write_code(codes[content[i]]);
+		for (size_t i = 0; i < readed; ++i)
+		{
+			writer.write_code(codes[buffer[i]]);
+		}
 	}
 
 	writer.flush();
@@ -37,22 +39,9 @@ void encode(task_descriptor descriptor)
 {
 	using namespace std;
 	raw_reader reader(descriptor.get_input_filename());
-	vector<pair<uint8_t, size_t>> frequencies(256);
-	for (size_t i = 0; i < 256; ++i)
-	{
-		frequencies[i].first = static_cast<uint8_t>(i);
-		frequencies[i].second = 0;
-	}
+	vector<pair<uint8_t, size_t>> frequencies;
 	
 	reader.read_frequencies(frequencies);
-
-	for (size_t i = 0; i < 256; ++i)
-	{
-		if (frequencies[i].second != 0)
-		{
-			cerr << i << " : " << frequencies[i].second << endl;
-		}
-	}
 
 	huffman_tree tree(frequencies);
 
@@ -76,8 +65,22 @@ void decode(task_descriptor descriptor)
 	reader.read_frequencies(frequencies);
 	huffman_tree tree(frequencies);
 	auto codes = tree.get_codes_mapping();
+
 	vector<bool> binary_content;
-	reader.get_content_as_bits(binary_content);
+	size_t readed_count;
+	auto buf = new uint8_t[1000];
+	while(reader.read_content(reinterpret_cast<char*>(buf), 1000, readed_count))
+	{
+		for (size_t i = 0; i < readed_count; ++i)
+		{
+			for (size_t j = 0; j < CHAR_BIT; ++j)
+			{
+				binary_content.push_back((buf[i] >> j & 1) != 0);
+			}
+		}
+	}
+
+	delete[] buf;
 	vector<uint8_t> content;
 	tree.decode(binary_content, content);
 

@@ -146,7 +146,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="buffered_reader.cpp" />
+    <ClCompile Include="reader.cpp" />
     <ClCompile Include="encoded_writer.cpp" />
     <ClCompile Include="encoded_reader.cpp" />
     <ClCompile Include="huffman_tree.cpp" />
@@ -159,7 +159,7 @@
     <ClCompile Include="task_descriptor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="buffered_reader.h" />
+    <ClInclude Include="reader.h" />
     <ClInclude Include="encoded_reader.h" />
     <ClInclude Include="encoded_writer.h" />
     <ClInclude Include="huffman_tree.h" />

@@ -1,5 +1,4 @@
 ﻿#include "reader.h"
-#include "io_exception.h"
 
 reader::reader(std::string const& filename)
 {
@@ -8,8 +7,8 @@ reader::reader(std::string const& filename)
 
 reader::~reader()
 {
-	if(openned_file_.is_open())
+	if(opened_file_.is_open())
 	{
-		openned_file_.close();
+		opened_file_.close();
 	}
 }

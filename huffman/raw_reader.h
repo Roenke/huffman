@@ -1,19 +1,18 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "reader.h"
 
-class raw_reader
+class raw_reader : public reader
 {
 public:
-	explicit raw_reader(std::string const& filename);
-	void read_frequencies(std::vector<std::pair<uint8_t, size_t>>& frequencies);
-	std::vector<uint8_t> const& raw_reader::get_content();
+	explicit raw_reader(std::string const& cs);
+	explicit raw_reader(const reader& reader) = delete;
+	raw_reader& operator=(const raw_reader&) = delete;
+	virtual ~raw_reader();
 
-	~raw_reader();
+	virtual void read_frequencies(std::vector<std::pair<uint8_t, size_t>>&) const override;
+	virtual bool read_content(char*, size_t, size_t&) override;
 private:
 	static const size_t file_size_limit;
-	std::string filename_;
-	std::vector<uint8_t> buffer_;
-
-	size_t read_all_into_buffer();
 };
