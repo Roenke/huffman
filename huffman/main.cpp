@@ -20,19 +20,54 @@ void ShowUsage()
 	std::cout << "Limits: Size of input file must be lesser then 5mb" << std::endl;
 }
 
+unsigned char reverse_bytes(unsigned char b) {
+	b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
+	b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
+	b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
+	return b;
+}
+
 void encode_file(std::vector<std::vector<bool>>& codes, raw_reader& reader, encoded_writer& writer)
 {
-	auto buffer = new uint8_t[4096];
+	auto input_buffer = new uint8_t[4096];
+	auto output_buffer = new uint8_t[4096];
+	size_t output_buffer_ptr = 0;
 	size_t readed;
-	while(reader.read_content(reinterpret_cast<char*>(buffer), 4096, readed))
+	uint8_t buf = 0;
+	uint8_t bit_counter = 0;
+	while(reader.read_content(reinterpret_cast<char*>(input_buffer), 4096, readed))
 	{
 		for (size_t i = 0; i < readed; ++i)
 		{
-			writer.write_code(codes[buffer[i]]);
+			for (auto& code : codes[input_buffer[i]])
+			{
+				if (bit_counter >= CHAR_BIT * sizeof(buf))
+				{
+					output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
+					bit_counter = 0;
+					buf = 0;
+					if (output_buffer_ptr >= 4096)
+					{
+						writer.append_data(reinterpret_cast<char*>(output_buffer), output_buffer_ptr);
+						output_buffer_ptr = 0;
+					}
+				}
+
+				buf = (buf << 1) | code;
+				bit_counter++;
+			}
 		}
 	}
 
-	writer.flush();
+	if (bit_counter != 0)
+	{
+		output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
+	}
+
+	writer.append_data(reinterpret_cast<char*>(output_buffer), output_buffer_ptr);
+
+	delete[] input_buffer;
+	delete[] output_buffer;
 }
 
 void encode(task_descriptor descriptor)
@@ -48,7 +83,7 @@ void encode(task_descriptor descriptor)
 	auto output_filename = descriptor.get_output_filename();
 	encoded_writer writer(output_filename);
 	auto codes = tree.get_codes_mapping();
-	writer.encode_mapping(frequencies);
+	writer.encode_char_mapping(frequencies);
 
 	encode_file(codes, reader, writer);
 }

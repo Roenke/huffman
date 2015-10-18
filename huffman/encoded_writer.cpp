@@ -1,74 +1,48 @@
 #include "encoded_writer.h"
+#include "io_exception.h"
 
-const uint8_t encoded_writer::bits_per_byte = 8;
-
-encoded_writer::encoded_writer(std::string& filename)
+void encoded_writer::append_data(char* data, size_t data_size)
 {
-	file.open(filename, std::ofstream::binary | std::ofstream::out);
-}
-
-void encoded_writer::encode_mapping(std::vector<std::pair<uint8_t, size_t>> const& frequencies)
-{
-	auto charset_size = frequencies.size();
-	uint16_t char_count = 0;
-	for (size_t i = 0; i < charset_size; ++i)
+	if(!opened_file_.is_open())
 	{
-		if(frequencies[i].second != 0)
+		opened_file_.open(filename_, std::ofstream::app | std::fstream::binary);
+		opened_file_.seekp(0, opened_file_.end);
+		if(!opened_file_.good())
 		{
-			char_count++;
+			throw io_exception("Cannot open file");
 		}
 	}
 
-	file.write(reinterpret_cast<char*>(&char_count), sizeof(uint16_t));
-	for (size_t i = 0; i < charset_size; i++)
+	opened_file_.write(data, data_size);
+}
+
+void encoded_writer::encode_char_mapping(std::vector<std::pair<uint8_t, size_t>> const& char_mapping) const
+{
+	auto sizeof_mapping = char_mapping.size();
+	uint16_t characters_count = 0;
+
+	std::ofstream file(filename_, std::ofstream::binary | std::ofstream::trunc);
+	file.seekp(sizeof(characters_count), file.beg);
+	uint8_t character;
+	size_t frequency;
+	for (size_t i = 0; i < sizeof_mapping; ++i)
 	{
-		if(frequencies[i].second != 0)
+		if (char_mapping[i].second != 0)
 		{
-			file.write(reinterpret_cast<const char*>(&frequencies[i].first), sizeof(uint8_t));
-			file.write(reinterpret_cast<const char*>(&frequencies[i].second), sizeof(size_t));
+			characters_count++;
+			character = char_mapping[i].first;
+			frequency = char_mapping[i].second;
+			file.write(reinterpret_cast<char*>(&character), sizeof(character));
+			file.write(reinterpret_cast<char*>(&frequency), sizeof(frequency));
 		}
 	}
-	buffer.resize(0);
-}
 
-void encoded_writer::write_code(std::vector<bool> const& code)
-{
-	auto size = code.size();
-	for (size_t i = 0; i < size; ++i)
-	{
-		buffer.push_back(code[i]);
-	}
-}
-
-// TODO внести внутрь класса
-unsigned char reverse(unsigned char b) {
-	b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-	b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-	b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-	return b;
-}
-
-void encoded_writer::flush()
-{
-	uint8_t buf = 0;
-	uint8_t c = 0;
-	auto buffer_size = buffer.size();
-
-	for (size_t i = 0; i < buffer_size; ++i)
-	{
-		if (c >= bits_per_byte * sizeof(buf))
-		{
-			buf = reverse(buf);
-			file.write(reinterpret_cast<char*>(&buf), 1);
-			c = 0;
-			buf = 0;
-		}
-
-		buf = (buf << 1) | buffer[i];
-		c++;
-	}
-
-	buf = reverse(buf);
-	file.write(reinterpret_cast<char*>(&buf), 1);
+	file.seekp(0, file.beg);
+	file.write(reinterpret_cast<char*>(&characters_count), sizeof(characters_count));
 	file.close();
+}
+
+encoded_writer::encoded_writer(const std::string& filename)
+	: writer(filename)
+{
 }

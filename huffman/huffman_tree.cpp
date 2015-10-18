@@ -105,5 +105,4 @@ void huffman_tree::decode(std::vector<bool>& content, std::vector<uint8_t>& outp
 		internal_node_ptr = dynamic_cast<internal_node*>(node_ptr);
 		node_ptr = content[i] ? internal_node_ptr->left : internal_node_ptr->right;
 	}
-	output.push_back(dynamic_cast<leaf*>(node_ptr)->ch);
 }

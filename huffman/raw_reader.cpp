@@ -53,5 +53,5 @@ bool raw_reader::read_content(char* buffer, size_t buffer_size, size_t& readed)
 		return true;
 	}
 
-	return true;
+	return false;
 }

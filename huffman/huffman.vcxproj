@@ -157,6 +157,7 @@
     <ClCompile Include="raw_reader.cpp" />
     <ClCompile Include="raw_writer.cpp" />
     <ClCompile Include="task_descriptor.cpp" />
+    <ClCompile Include="writer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="reader.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="raw_reader.h" />
     <ClInclude Include="raw_writer.h" />
     <ClInclude Include="task_descriptor.h" />
+    <ClInclude Include="writer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
