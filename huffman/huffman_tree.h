@@ -2,6 +2,9 @@
 #include <forward_list>
 #include <vector>
 
+class encoded_reader;
+class raw_writer;
+
 namespace internal_tree
 {
 	class node
@@ -49,14 +52,14 @@ namespace internal_tree
 			return l->weight > r->weight;
 		}
 	};
-}
+} // internal_tree
 
 class huffman_tree
 {
 public:
 	explicit huffman_tree(std::vector<std::pair<uint8_t, size_t>>&);
 	std::vector<std::vector<bool>> const& get_codes_mapping();
-	void decode(std::vector<bool>& content, std::vector<uint8_t>& output);
+	void decode(encoded_reader &, raw_writer&) const;
 private:
 	static const size_t alphabet_size;
 	internal_tree::node* tree_root;

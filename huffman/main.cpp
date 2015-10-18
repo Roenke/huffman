@@ -53,16 +53,13 @@ void encode_file(std::vector<std::vector<bool>>& codes, raw_reader& reader, enco
 					}
 				}
 
-				buf = (buf << 1) | code;
+				buf = buf << 1 | code;
 				bit_counter++;
 			}
 		}
 	}
 
-	if (bit_counter != 0)
-	{
-		output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
-	}
+	output_buffer[output_buffer_ptr++] = reverse_bytes(buf);
 
 	writer.append_data(reinterpret_cast<char*>(output_buffer), output_buffer_ptr);
 
@@ -96,32 +93,13 @@ void decode(task_descriptor descriptor)
 
 	vector<pair<uint8_t, size_t>> frequencies;
 
-
 	reader.read_frequencies(frequencies);
 	huffman_tree tree(frequencies);
 	auto codes = tree.get_codes_mapping();
 
-	vector<bool> binary_content;
-	size_t readed_count;
-	auto buf = new uint8_t[1000];
-	while(reader.read_content(reinterpret_cast<char*>(buf), 1000, readed_count))
-	{
-		for (size_t i = 0; i < readed_count; ++i)
-		{
-			for (size_t j = 0; j < CHAR_BIT; ++j)
-			{
-				binary_content.push_back((buf[i] >> j & 1) != 0);
-			}
-		}
-	}
-
-	delete[] buf;
-	vector<uint8_t> content;
-	tree.decode(binary_content, content);
-
 	auto output_filename = descriptor.get_output_filename();
 	raw_writer writer(output_filename);
-	writer.write_bytes(content);
+	tree.decode(reader, writer);
 }
 
 int main(int argc, char* argv[])

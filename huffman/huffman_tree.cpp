@@ -1,7 +1,8 @@
 ﻿#include "huffman_tree.h"
 #include <vector>
 #include <queue>
-
+#include "encoded_reader.h"
+#include "raw_writer.h"
 
 typedef std::vector<bool> char_code;
 
@@ -87,22 +88,53 @@ std::vector<std::vector<bool>> const& huffman_tree::get_codes_mapping()
 	return codes;
 }
 
-void huffman_tree::decode(std::vector<bool>& content, std::vector<uint8_t>& output)
+void huffman_tree::decode(encoded_reader &reader, raw_writer& writer) const
 {
 	using namespace internal_tree;
+
+	auto input_buffer = new uint8_t[4096];
+	auto output_buffer = new uint8_t[4096];
+	size_t i_ptr;
+	size_t o_ptr = 0;
 	auto node_ptr = tree_root;
 	internal_node* internal_node_ptr;
-	auto content_size = content.size();
-	for (size_t i = 0; i < content_size; ++i)
+	size_t readed;
+	uint8_t bit_number = 0;
+	auto total_characters = tree_root->weight;
+	size_t total_decoded = 0;
+	bool binary_value;
+	while(reader.read_content(reinterpret_cast<char*>(input_buffer), 4096, readed))
 	{
-		if(node_ptr->is_leaf())
+		for (i_ptr = 0; i_ptr < readed; ++i_ptr)
 		{
-			output.push_back(dynamic_cast<leaf*>(node_ptr)->ch);
-			if (tree_root->is_leaf()) continue;
-			node_ptr = tree_root;
+			for (bit_number = 0; bit_number < CHAR_BIT; ++bit_number)
+			{
+				binary_value = input_buffer[i_ptr] >> bit_number & 1 != 0;
+				if(node_ptr->is_leaf())
+				{
+					output_buffer[o_ptr++] = dynamic_cast<leaf*>(node_ptr)->ch;
+					
+					if(o_ptr >= 4096)
+					{
+						writer.append_data(reinterpret_cast<char*>(output_buffer), o_ptr);
+						total_decoded += o_ptr;
+						o_ptr = 0;
+					}
+
+					if (tree_root->is_leaf()) continue;
+					node_ptr = tree_root;
+				}
+
+				internal_node_ptr = dynamic_cast<internal_node*>(node_ptr);
+				node_ptr = binary_value ? internal_node_ptr->left : internal_node_ptr->right;
+			}
 		}
-		
-		internal_node_ptr = dynamic_cast<internal_node*>(node_ptr);
-		node_ptr = content[i] ? internal_node_ptr->left : internal_node_ptr->right;
 	}
+
+	if(node_ptr->is_leaf())
+	{
+		output_buffer[o_ptr] = dynamic_cast<leaf*>(node_ptr)->ch;
+	}
+
+	writer.append_data(reinterpret_cast<char*>(output_buffer), total_characters - total_decoded);
 }

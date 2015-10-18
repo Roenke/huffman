@@ -11,7 +11,7 @@ void encoded_reader::read_frequencies(std::vector<std::pair<uint8_t, size_t>>& f
 {
 	std::ifstream file(filename_, std::fstream::binary);
 	uint16_t alphabet_size;
-	file.read(reinterpret_cast<char*>(&alphabet_size), sizeof(uint16_t));
+	file.read(reinterpret_cast<char*>(&alphabet_size), sizeof(alphabet_size));
 	auto header_size = eval_header_size(alphabet_size);
 
 	auto buffer = new char[header_size];
@@ -35,7 +35,7 @@ bool encoded_reader::read_content(char* buffer, size_t buffer_size, size_t& read
 {
 	if(!opened_file_.is_open())
 	{
-		opened_file_.open(filename_);
+		opened_file_.open(filename_, std::ifstream::binary);
 		if(!opened_file_.good())
 		{
 			throw io_exception("Cannot to open file");

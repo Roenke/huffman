@@ -2,7 +2,7 @@
 #include "io_exception.h"
 #include <fstream>
 
-const size_t raw_reader::file_size_limit = 10 * 1024 * 1024; // 5 megabytes
+const size_t raw_reader::file_size_limit = 5 * 1024 * 1024; // 5 megabytes
 
 
 raw_reader::raw_reader(std::string const& filename)
@@ -12,7 +12,6 @@ raw_reader::raw_reader(std::string const& filename)
 
 raw_reader::~raw_reader()
 {
-	opened_file_.close();
 }
 
 void raw_reader::read_frequencies(std::vector<std::pair<uint8_t, size_t>>& frequencies) const
@@ -34,13 +33,18 @@ void raw_reader::read_frequencies(std::vector<std::pair<uint8_t, size_t>>& frequ
 			frequencies[buffer[i]].second++;
 		}
 	}
+
+	for (size_t i = 0; i < file.gcount();  ++i)
+	{
+		frequencies[buffer[i]].second++;
+	}
 }
 
 bool raw_reader::read_content(char* buffer, size_t buffer_size, size_t& readed)
 {
 	if (!opened_file_.is_open())
 	{
-		opened_file_.open(filename_);
+		opened_file_.open(filename_, std::ifstream::binary);
 		if (!opened_file_.good())
 		{
 			throw io_exception("Cannot to open file");

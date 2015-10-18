@@ -1,6 +1,10 @@
 #include "encoded_writer.h"
 #include "io_exception.h"
 
+encoded_writer::~encoded_writer()
+{
+}
+
 void encoded_writer::append_data(char* data, size_t data_size)
 {
 	if(!opened_file_.is_open())
