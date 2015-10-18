@@ -10,15 +10,13 @@ namespace internal_tree
 	class node
 	{
 	public:
-		explicit node(size_t frequency)
-		{
-			weight = frequency;
-		}
+		explicit node(size_t frequency) { weight = frequency; }
+		node(node&) = default;
+		node& operator=(node&) = delete;
+		virtual ~node() {}
 
 		virtual bool is_leaf() = 0;
 		size_t weight;
-
-		virtual ~node(){}
 	};
 
 	class internal_node : public node
@@ -26,6 +24,9 @@ namespace internal_tree
 	public:
 		internal_node(node* l, node* r)
 			: node(l->weight + r->weight), left(l), right(r) {}
+		internal_node(internal_node&) = default;
+		internal_node& operator=(internal_node&) = delete;
+		~internal_node() { delete left; delete right; }
 
 		virtual bool is_leaf() override { return false; };
 
@@ -38,6 +39,9 @@ namespace internal_tree
 	public:
 		explicit leaf(uint8_t c, size_t frequency)
 			: node(frequency), ch(c) {}
+		leaf(leaf&) = default;
+		leaf& operator=(leaf&) = delete;
+		~leaf() {};
 
 		virtual bool is_leaf() override { return true; };
 

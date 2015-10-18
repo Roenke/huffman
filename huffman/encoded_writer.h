@@ -12,5 +12,5 @@ public:
 	~encoded_writer() override;
 
 	void append_data(char*, size_t) override;
-	void encode_char_mapping(std::vector<std::pair<uint8_t, size_t>> const&) const;
+	void encode_char_mapping(std::vector<std::pair<uint8_t, size_t>> const&, std::streampos&) const;
 };

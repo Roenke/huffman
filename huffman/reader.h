@@ -7,6 +7,7 @@ class reader
 {
 public:
 	virtual void read_frequencies(std::vector<std::pair<uint8_t, size_t>> &) const = 0;
+	std::streampos get_file_size() const;
 	virtual bool read_content(char*, size_t, size_t&) = 0;
 protected:
 	explicit reader(std::string const& );

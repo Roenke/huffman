@@ -50,7 +50,7 @@ bool raw_reader::read_content(char* buffer, size_t buffer_size, size_t& readed)
 
 	if (opened_file_.read(buffer, buffer_size) || opened_file_.gcount() > 0)
 	{
-		readed = opened_file_.gcount();
+		readed = static_cast<size_t>(opened_file_.gcount());
 		return true;
 	}
 

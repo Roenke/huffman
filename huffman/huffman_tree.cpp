@@ -27,6 +27,12 @@ void huffman_tree::build(std::vector<std::pair<uint8_t, size_t>>& frequencies)
 		}
 	}
 
+	if(queue.size() == 0)
+	{
+		tree_root_ = nullptr;
+		return;
+	}
+
 	while(queue.size() > 1)
 	{
 		auto first = queue.top();
@@ -64,6 +70,10 @@ void huffman_tree::resolve_codes(internal_tree::node* node, std::vector<bool> pa
 
 huffman_tree::~huffman_tree()
 {
+	if (tree_root_ != nullptr)
+	{
+		delete tree_root_;
+	}
 }
 
 std::vector<std::vector<bool>> const& huffman_tree::get_codes_mapping()
@@ -71,7 +81,11 @@ std::vector<std::vector<bool>> const& huffman_tree::get_codes_mapping()
 	if (!is_codes_resolved_)
 	{
 		std::vector<bool> vector;
-		resolve_codes(tree_root_, vector);
+		if (tree_root_ != nullptr) 
+		{
+			resolve_codes(tree_root_, vector);
+		}
+
 		is_codes_resolved_ = true;
 	}
 
@@ -99,7 +113,7 @@ void huffman_tree::decode(encoded_reader &reader, raw_writer& writer) const
 		{
 			for (bit_number = 0; bit_number < CHAR_BIT; ++bit_number)
 			{
-				binary_value = input_buffer[i_ptr] >> bit_number & 1 != 0;
+				binary_value = (input_buffer[i_ptr] >> bit_number & 1) != 0;
 				if(node_ptr->is_leaf())
 				{
 					output_buffer[o_ptr++] = dynamic_cast<leaf*>(node_ptr)->ch;

@@ -10,6 +10,7 @@ public:
 	writer& operator=(writer const&) = delete;
 	virtual ~writer();
 
+	std::streampos get_file_size() const;
 	virtual void append_data(char*, size_t) = 0;
 	
 protected:

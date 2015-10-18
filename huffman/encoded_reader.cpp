@@ -49,11 +49,24 @@ bool encoded_reader::read_content(char* buffer, size_t buffer_size, size_t& read
 
 	if(opened_file_.read(buffer, buffer_size) || opened_file_.gcount() > 0)
 	{
-		readed = opened_file_.gcount();
+		readed = static_cast<size_t>(opened_file_.gcount());
 		return true;
 	}
 
 	return false;
+}
+
+size_t encoded_reader::get_system_info_size() const
+{
+	std::ifstream file(filename_, std::fstream::ate);
+	if(!file.good())
+	{
+		throw io_exception("Cannot open file");
+	}
+
+	uint16_t count;
+	file.read(reinterpret_cast<char*>(&count), sizeof(count));
+	return eval_header_size(count);
 }
 
 encoded_reader::~encoded_reader()
