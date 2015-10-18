@@ -5,6 +5,11 @@
 class parameters_parser
 {
 public:
+	parameters_parser();
+	parameters_parser(parameters_parser&) = delete;
+	parameters_parser& operator=(parameters_parser&) = delete;
+	~parameters_parser() = delete;
+
 	static task_descriptor parse(std::vector<std::string>const& argv);
 private:
 	static const std::string encode_key_;

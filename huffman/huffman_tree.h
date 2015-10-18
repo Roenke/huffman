@@ -27,7 +27,7 @@ namespace internal_tree
 		internal_node(node* l, node* r)
 			: node(l->weight + r->weight), left(l), right(r) {}
 
-		virtual bool is_leaf() override;
+		virtual bool is_leaf() override { return false; };
 
 		node* left;
 		node* right;
@@ -39,7 +39,7 @@ namespace internal_tree
 		explicit leaf(uint8_t c, size_t frequency)
 			: node(frequency), ch(c) {}
 
-		virtual bool is_leaf() override;
+		virtual bool is_leaf() override { return true; };
 
 		uint8_t ch;
 	};
@@ -58,14 +58,17 @@ class huffman_tree
 {
 public:
 	explicit huffman_tree(std::vector<std::pair<uint8_t, size_t>>&);
+	huffman_tree(huffman_tree const& src) = delete;
+	huffman_tree& operator=(huffman_tree& src) = delete;
+	~huffman_tree();
+
 	std::vector<std::vector<bool>> const& get_codes_mapping();
 	void decode(encoded_reader &, raw_writer&) const;
 private:
-	static const size_t alphabet_size;
-	internal_tree::node* tree_root;
-	size_t symbols_count;
-	std::vector<std::vector<bool>> codes;
-	bool is_codes_resolved;
+	static const size_t alphabet_size_;
+	internal_tree::node* tree_root_;
+	std::vector<std::vector<bool>> codes_;
+	bool is_codes_resolved_;
 
 	void build(std::vector<std::pair<uint8_t, size_t>>&);
 	void resolve_codes(internal_tree::node* node, std::vector<bool> path);

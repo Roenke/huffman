@@ -6,7 +6,9 @@ class raw_writer : public writer
 {
 public:
 	explicit raw_writer(const std::string& filename);
-	virtual void append_data(char*, size_t) override;
+	explicit raw_writer(writer &) = delete;
+	writer& operator=(writer&) = delete;
+	~raw_writer();
 
-	virtual ~raw_writer() override;
+	virtual void append_data(char*, size_t) override;
 };

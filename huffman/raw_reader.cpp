@@ -2,9 +2,6 @@
 #include "io_exception.h"
 #include <fstream>
 
-const size_t raw_reader::file_size_limit = 5 * 1024 * 1024; // 5 megabytes
-
-
 raw_reader::raw_reader(std::string const& filename)
 	:reader(filename)
 {

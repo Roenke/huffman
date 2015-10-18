@@ -7,6 +7,17 @@ task_descriptor::task_descriptor(mode programMode, std::string const& in, std::s
 	output_filename_ = out;
 }
 
+task_descriptor::task_descriptor(task_descriptor const&task_descriptor)
+{
+	input_filename_ = task_descriptor.input_filename_;
+	output_filename_ = task_descriptor.output_filename_;
+	task_mode_ = task_descriptor.task_mode_;
+}
+
+task_descriptor::~task_descriptor()
+{
+}
+
 mode task_descriptor::get_mode() const
 {
 	return task_mode_;

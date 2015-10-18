@@ -22,5 +22,4 @@ void raw_writer::append_data(char* data, size_t data_size)
 
 raw_writer::~raw_writer()
 {
-	opened_file_.close();
 }

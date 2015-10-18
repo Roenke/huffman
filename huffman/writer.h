@@ -6,8 +6,12 @@ class writer
 {
 public:
 	explicit writer(std::string filename);
-	virtual void append_data(char*, size_t) = 0;
+	writer(writer const&) = delete;
+	writer& operator=(writer const&) = delete;
 	virtual ~writer();
+
+	virtual void append_data(char*, size_t) = 0;
+	
 protected:
 	std::string filename_;
 	std::ofstream opened_file_;

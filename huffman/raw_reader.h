@@ -13,6 +13,4 @@ public:
 
 	virtual void read_frequencies(std::vector<std::pair<uint8_t, size_t>>&) const override;
 	virtual bool read_content(char*, size_t, size_t&) override;
-private:
-	static const size_t file_size_limit;
 };

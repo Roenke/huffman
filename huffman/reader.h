@@ -13,6 +13,7 @@ protected:
 	explicit reader(const reader&) = delete;
 	reader& operator=(const reader&) = delete;
 	virtual ~reader();
+
 	std::string filename_;
 	std::ifstream opened_file_;
 };
