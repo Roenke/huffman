@@ -95,5 +95,8 @@
     <ClInclude Include="executor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="internal_huffman_tree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

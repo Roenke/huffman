@@ -22,10 +22,10 @@ int main(int argc, char* argv[])
     vector<string> args;
 
     args.assign(argv + 1, argv + argc);
-    auto parser = new parameters_parser();
+    parameters_parser parser{};
     try
     {
-        auto descriptor = parser->parse(args);
+        auto descriptor = parser.parse(args);
 
         executor exec(descriptor);
         exec.start();

@@ -22,6 +22,6 @@ private:
     void decode() const;
     void encode() const;
 
-    void encode_file(std::vector<std::vector<bool>>&, raw_reader&, encoded_writer&) const;
-    uint8_t reverse_bytes(uint8_t b) const;
+    void     encode_file  (std::vector<std::vector<bool>>&, raw_reader&, encoded_writer&) const;
+    uint8_t  reverse_bytes(uint8_t b) const;
 };

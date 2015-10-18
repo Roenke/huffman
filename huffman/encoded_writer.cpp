@@ -11,7 +11,8 @@ void encoded_writer::append_data(char* data, size_t data_size)
         opened_file_.open(filename_, std::ofstream::app | std::fstream::binary);
         if(!opened_file_.good())
         {
-            throw io_exception("Cannot open file");
+            io_exception ex("Cannot open file " + filename_);
+            throw ex;
         }
 
         opened_file_.seekp(0, opened_file_.end);

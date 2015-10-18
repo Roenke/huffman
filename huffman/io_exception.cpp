@@ -6,11 +6,6 @@ io_exception::io_exception(std::string const& msg)
     message_ = msg;
 }
 
-io_exception::io_exception(io_exception& io_exception)
-{
-    message_ = io_exception.message_;
-}
-
 std::string io_exception::get_description() const
 {
     return message_;

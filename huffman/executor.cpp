@@ -31,7 +31,7 @@ void executor::encode_file(std::vector<std::vector<bool>>& codes, raw_reader& re
     {
         for (size_t i = 0; i < readed; ++i)
         {
-            for (auto& code : codes[input_buffer[i]])
+            for (auto const& code : codes[input_buffer[i]])
             {
                 if (bit_counter >= CHAR_BIT * sizeof(buf))
                 {
@@ -106,7 +106,7 @@ void executor::encode() const
     encoded_writer writer(output_filename);
     auto codes = tree.get_codes_mapping();
 
-    std::streampos sizeof_headers;
+    streampos sizeof_headers;
     writer.encode_char_mapping(frequencies, sizeof_headers);
 
     encode_file(codes, reader, writer);

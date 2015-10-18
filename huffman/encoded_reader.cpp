@@ -38,7 +38,8 @@ bool encoded_reader::read_content(char* buffer, size_t buffer_size, size_t& read
         opened_file_.open(filename_, std::ifstream::binary);
         if(!opened_file_.good())
         {
-            throw io_exception("Cannot to open file");
+            io_exception ex("Cannot open file " + filename_);
+            throw ex;
         }
 
         uint16_t alphabet_size;
@@ -61,7 +62,8 @@ size_t encoded_reader::get_system_info_size() const
     std::ifstream file(filename_, std::fstream::ate);
     if(!file.good())
     {
-        throw io_exception("Cannot open file");
+        io_exception ex("Cannot open file " + filename_);
+        throw ex;
     }
 
     uint16_t count;

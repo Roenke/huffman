@@ -1,17 +1,9 @@
 #include "parse_exception.h"
 
 parse_exception::parse_exception(exception_type type)
+    :exception()
 {
     type_ = type;
-}
-
-parse_exception::parse_exception(parse_exception& parse_exception)
-{
-    type_ = parse_exception.type_;
-}
-
-parse_exception::~parse_exception()
-{
 }
 
 std::string parse_exception::get_description() const

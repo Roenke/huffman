@@ -19,7 +19,8 @@ task_descriptor parameters_parser::parse(std::vector<std::string> const& argv)
     auto argc = argv.size();
     if(argc != 5)
     {
-        throw parse_exception(wrong_number_of_arguments);
+        parse_exception ex(static_cast<exception_type>(wrong_number_of_arguments));
+        throw ex;
     }
 
     std::string in_filename;
@@ -51,7 +52,8 @@ void parameters_parser::try_in_file_correct(std::vector<std::string> const& argv
         {
             if(!is_file_exists(argv[i + 1]))
             {
-                throw parse_exception(in_file_not_exists);
+                parse_exception ex(in_file_not_exists);
+                throw ex;
             }
 
             filename = argv[i + 1];
@@ -59,7 +61,8 @@ void parameters_parser::try_in_file_correct(std::vector<std::string> const& argv
         }
     }
 
-    throw parse_exception(wrong_input_file_key);
+    parse_exception ex(wrong_input_file_key);
+    throw ex;
 }
 
 void parameters_parser::try_out_file_correct(std::vector<std::string> const& argv, std::string& filename)
@@ -74,7 +77,8 @@ void parameters_parser::try_out_file_correct(std::vector<std::string> const& arg
         }
     }
 
-    throw parse_exception(wrong_output_file_key);
+    parse_exception ex(wrong_output_file_key);
+    throw ex;
 }
 
 void parameters_parser::try_find_mode(std::vector<std::string> const& argv, mode &mode)
@@ -95,5 +99,6 @@ void parameters_parser::try_find_mode(std::vector<std::string> const& argv, mode
         }
     }
 
-    throw parse_exception(wrong_mode_key);
+    parse_exception ex(wrong_mode_key);
+    throw ex;
 }
