@@ -1,12 +1,14 @@
 #pragma once
 #include <fstream>
-#include <vector>
+#include "writer.h"
 
-class raw_writer
+class raw_writer : public writer
 {
 public:
-	explicit raw_writer(std::string const &);
-	void write_bytes(std::vector<uint8_t>& content);
-private:
-	std::ofstream file;
+    explicit raw_writer(const std::string& filename);
+    explicit raw_writer(writer &) = delete;
+    writer& operator=  (writer&)  = delete;
+    ~raw_writer        ();
+
+    virtual void append_data(char*, size_t) override;
 };

@@ -85,7 +85,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
@@ -146,7 +146,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="buffered_reader.cpp" />
+    <ClCompile Include="executor.cpp" />
+    <ClCompile Include="reader.cpp" />
     <ClCompile Include="encoded_writer.cpp" />
     <ClCompile Include="encoded_reader.cpp" />
     <ClCompile Include="huffman_tree.cpp" />
@@ -157,9 +158,12 @@
     <ClCompile Include="raw_reader.cpp" />
     <ClCompile Include="raw_writer.cpp" />
     <ClCompile Include="task_descriptor.cpp" />
+    <ClCompile Include="writer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="buffered_reader.h" />
+    <ClInclude Include="executor.h" />
+    <ClInclude Include="internal_huffman_tree.h" />
+    <ClInclude Include="reader.h" />
     <ClInclude Include="encoded_reader.h" />
     <ClInclude Include="encoded_writer.h" />
     <ClInclude Include="huffman_tree.h" />
@@ -169,6 +173,7 @@
     <ClInclude Include="raw_reader.h" />
     <ClInclude Include="raw_writer.h" />
     <ClInclude Include="task_descriptor.h" />
+    <ClInclude Include="writer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
