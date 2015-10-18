@@ -1,17 +1,17 @@
 ﻿#include "io_exception.h"
 
 io_exception::io_exception(std::string const& msg)
-	: exception()
+    : exception()
 {
-	message_ = msg;
+    message_ = msg;
 }
 
 io_exception::io_exception(io_exception& io_exception)
 {
-	message_ = io_exception.message_;
+    message_ = io_exception.message_;
 }
 
 std::string io_exception::get_description() const
 {
-	return message_;
+    return message_;
 }
